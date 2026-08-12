@@ -4,6 +4,7 @@
   const STORAGE_KEY = 'recall-toefl-v1';
   const TYPE_LABELS = { word: 'WORD', sentence: 'SENTENCE', mistake: 'MISTAKE' };
   const TYPE_KO = { word: '단어', sentence: '중요 문장', mistake: '오답' };
+  const ANSWER_LABELS = { word: 'MEANING', sentence: 'INTERPRETATION', mistake: 'CORRECT ANSWER' };
   const DAY = 86400000;
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -176,16 +177,25 @@
     $('#studyPrompt').textContent = card.prompt;
     $('#studyAnswer').textContent = card.answer;
     $('#studyNote').textContent = card.note;
-    $('.prompt-face').hidden = false; $('.answer-face').hidden = true; $('#ratingPanel').hidden = true;
-    $('#studyCard').setAttribute('aria-label', '정답 보기');
+    $('#studyAnswerLabel').textContent = ANSWER_LABELS[card.type];
+    $('#studyNoteBlock').hidden = !card.note;
+    $('#studyTag').textContent = '';
+    $('#studyCard').classList.remove('revealed');
+    $('#answerReveal').hidden = true;
+    $('#showAnswer').hidden = false;
+    $('#ratingPanel').hidden = true;
     $('#progressText').textContent = `${Math.min(studyIndex + 1, studyQueue.length)} / ${studyQueue.length}`;
     $('#progressBar').style.width = `${studyQueue.length ? sessionAnswered / studyQueue.length * 100 : 0}%`;
   }
 
   function revealAnswer() {
-    if ($('.prompt-face').hidden) return;
-    $('.prompt-face').hidden = true; $('.answer-face').hidden = false; $('#ratingPanel').hidden = false;
-    $('#studyCard').setAttribute('aria-label', '정답이 표시됨');
+    if (!$('#answerReveal').hidden) return;
+    const card = state.cards.find(item => item.id === studyQueue[studyIndex]);
+    $('#studyTag').textContent = card ? card.tags.slice(0, 2).join(' · ') : '';
+    $('#studyCard').classList.add('revealed');
+    $('#answerReveal').hidden = false;
+    $('#showAnswer').hidden = true;
+    $('#ratingPanel').hidden = false;
   }
 
   function rate(rating) {
@@ -266,8 +276,7 @@
     $$('.nav-item').forEach(btn => btn.addEventListener('click', () => go(btn.dataset.view)));
     $$('[data-go]').forEach(btn => btn.addEventListener('click', () => go(btn.dataset.go)));
     $('#startStudy').addEventListener('click', startStudy);
-    $('#studyCard').addEventListener('click', revealAnswer);
-    $('#studyCard').addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); revealAnswer(); } });
+    $('#showAnswer').addEventListener('click', revealAnswer);
     $$('.rating').forEach(btn => btn.addEventListener('click', () => rate(btn.dataset.rating)));
     $('#cardForm').addEventListener('submit', submitCard); $('#cancelEdit').addEventListener('click', clearForm);
     $$('input[name="type"]').forEach(input => input.addEventListener('change', () => updateFormLabels(input.value)));
