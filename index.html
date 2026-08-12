@@ -75,17 +75,20 @@
           <div class="study-progress"><span id="progressText">1 / 10</span><div><i id="progressBar"></i></div></div>
         </div>
         <div class="study-stage" id="studyStage">
-          <article class="study-card" id="studyCard" tabindex="0" role="button" aria-label="정답 보기">
+          <article class="study-card" id="studyCard" aria-live="polite">
             <div class="card-meta"><span id="studyType">WORD</span><span id="studyTag"></span></div>
-            <div class="card-face prompt-face">
+            <div class="study-question">
               <p class="card-kicker">RECALL THIS</p>
               <h2 id="studyPrompt"></h2>
-              <p class="tap-hint">카드를 눌러 내용을 확인하세요 <span>↗</span></p>
+              <button class="show-answer" id="showAnswer" type="button">SHOW <span>↓</span></button>
             </div>
-            <div class="card-face answer-face" hidden>
-              <p class="card-kicker">CHECK YOUR MEMORY</p>
+            <div class="answer-reveal" id="answerReveal" hidden>
+              <p class="card-kicker" id="studyAnswerLabel">MEANING</p>
               <h3 id="studyAnswer"></h3>
-              <p id="studyNote"></p>
+              <div class="study-note" id="studyNoteBlock">
+                <span>MEMO</span>
+                <p id="studyNote"></p>
+              </div>
             </div>
           </article>
           <div class="rating-panel" id="ratingPanel" hidden>
