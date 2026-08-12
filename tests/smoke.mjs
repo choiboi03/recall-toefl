@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { JSDOM } from 'jsdom';
 
 const html = (await readFile(new URL('../index.html', import.meta.url), 'utf8'))
-  .replace('<script src="app.js"></script>', '');
+  .replace(/<script src="app\.js[^\"]*"><\/script>/, '');
 const app = await readFile(new URL('../app.js', import.meta.url), 'utf8');
 const dom = new JSDOM(html, { url: 'https://recall.test/', runScripts: 'dangerously' });
 
