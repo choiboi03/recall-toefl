@@ -39,6 +39,7 @@ assert.equal(document.querySelector('#ratingPanel').hidden, true, 'ratings shoul
 assert.equal(document.querySelector('#studyTag').textContent, '', 'tags should not reveal a hint before SHOW');
 click('#showAnswer');
 assert.equal(document.querySelector('#answerReveal').hidden, false, 'SHOW should reveal the answer');
+assert.equal(document.querySelector('#showAnswer').hidden, true, 'SHOW button should disappear after reveal');
 assert.equal(document.querySelector('#ratingPanel').hidden, false, 'SHOW should reveal the ratings');
 assert.equal(document.querySelector('#studyNote').textContent, 'Smartphones have become ubiquitous.');
 click('[data-rating="master"]');
