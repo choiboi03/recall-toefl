@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#14281d">
+  <meta name="description" content="SM-2 기반 개인 TOEFL 단어·중요 문장·오답 반복 학습장">
+  <title>RE:CALL — TOEFL Study Deck</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#today" aria-label="RE:CALL 홈">
+        <span class="brand-mark">R:</span>
+        <span>RE:CALL<small>TOEFL STUDY DECK</small></span>
+      </a>
+
+      <nav class="nav" aria-label="주 메뉴">
+        <button class="nav-item active" data-view="today"><span>01</span>오늘 학습</button>
+        <button class="nav-item" data-view="library"><span>02</span>아카이브</button>
+        <button class="nav-item" data-view="add"><span>03</span>새 카드</button>
+        <button class="nav-item" data-view="stats"><span>04</span>기록 · 설정</button>
+      </nav>
+
+      <div class="sidebar-note">
+        <span class="eyebrow">DAILY RULE</span>
+        <p>짧게, 매일.<br>기억 직전에 다시.</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <p class="date" id="todayDate"></p>
+          <p class="greeting">오늘도 기억을 한 겹 더.</p>
+        </div>
+        <button class="add-quick" data-go="add"><span>＋</span> 카드 추가</button>
+      </header>
+
+      <section class="view active" id="view-today">
+        <div class="hero-grid">
+          <article class="hero-card">
+            <span class="eyebrow light">TODAY'S SESSION</span>
+            <h1>오늘의<br>기억을 시작하세요.</h1>
+            <p id="todaySummary">복습할 카드를 불러오는 중입니다.</p>
+            <button class="primary inverted" id="startStudy">학습 시작 <span>→</span></button>
+            <div class="hero-orbit" aria-hidden="true"><span></span><span></span><b>R</b></div>
+          </article>
+
+          <div class="metric-stack">
+            <article class="metric-card lime">
+              <span>오늘 학습</span>
+              <strong id="dueCount">0</strong>
+              <small>CARDS DUE</small>
+            </article>
+            <article class="metric-card cream">
+              <span>연속 학습</span>
+              <strong><span id="streakCount">0</span><i>일</i></strong>
+              <small>KEEP THE RHYTHM</small>
+            </article>
+          </div>
+        </div>
+
+        <div class="section-head">
+          <div><span class="eyebrow">YOUR COLLECTION</span><h2>기억의 구성</h2></div>
+          <button class="text-link" data-go="library">전체 보기 →</button>
+        </div>
+        <div class="collection-grid" id="collectionSummary"></div>
+      </section>
+
+      <section class="view" id="view-study">
+        <div class="study-top">
+          <button class="back-link" data-go="today">← 나가기</button>
+          <div class="study-progress"><span id="progressText">1 / 10</span><div><i id="progressBar"></i></div></div>
+        </div>
+        <div class="study-stage" id="studyStage">
+          <article class="study-card" id="studyCard" tabindex="0" role="button" aria-label="정답 보기">
+            <div class="card-meta"><span id="studyType">WORD</span><span id="studyTag"></span></div>
+            <div class="card-face prompt-face">
+              <p class="card-kicker">RECALL THIS</p>
+              <h2 id="studyPrompt"></h2>
+              <p class="tap-hint">카드를 눌러 내용을 확인하세요 <span>↗</span></p>
+            </div>
+            <div class="card-face answer-face" hidden>
+              <p class="card-kicker">CHECK YOUR MEMORY</p>
+              <h3 id="studyAnswer"></h3>
+              <p id="studyNote"></p>
+            </div>
+          </article>
+          <div class="rating-panel" id="ratingPanel" hidden>
+            <p>얼마나 잘 기억했나요?</p>
+            <div class="rating-buttons">
+              <button class="rating bad" data-rating="not"><b>NOT AT ALL</b><span>다시 학습</span></button>
+              <button class="rating okay" data-rating="soso"><b>SOSO</b><span>어려웠어요</span></button>
+              <button class="rating good" data-rating="master"><b>MASTER</b><span>확실히 알아요</span></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="view" id="view-library">
+        <div class="page-title"><span class="eyebrow">ARCHIVE</span><h1>나의 학습 카드</h1><p>단어, 중요 문장, 오답을 한곳에서 찾고 관리하세요.</p></div>
+        <div class="toolbar">
+          <label class="search"><span>⌕</span><input id="searchInput" type="search" placeholder="단어, 뜻, 문장, 태그 검색"></label>
+          <div class="filters" role="group" aria-label="카드 종류 필터">
+            <button class="filter active" data-filter="all">전체</button>
+            <button class="filter" data-filter="word">단어</button>
+            <button class="filter" data-filter="sentence">문장</button>
+            <button class="filter" data-filter="mistake">오답</button>
+          </div>
+        </div>
+        <div class="library-list" id="libraryList"></div>
+      </section>
+
+      <section class="view" id="view-add">
+        <div class="page-title"><span class="eyebrow">NEW MEMORY</span><h1 id="formTitle">새 카드 만들기</h1><p>한 카드에는 하나의 기억만 담을수록 오래 남습니다.</p></div>
+        <form class="card-form" id="cardForm">
+          <input type="hidden" id="editId">
+          <fieldset class="type-picker">
+            <legend>카드 종류</legend>
+            <label><input type="radio" name="type" value="word" checked><span><b>WORD</b>단어</span></label>
+            <label><input type="radio" name="type" value="sentence"><span><b>SENTENCE</b>중요 문장</span></label>
+            <label><input type="radio" name="type" value="mistake"><span><b>MISTAKE</b>오답</span></label>
+          </fieldset>
+          <div class="form-grid">
+            <label class="field"><span id="promptLabel">단어 · 표현</span><textarea id="promptInput" required maxlength="500" placeholder="예: ubiquitous"></textarea></label>
+            <label class="field"><span id="answerLabel">뜻 · 정답</span><textarea id="answerInput" required maxlength="1000" placeholder="예: 어디에나 존재하는, 아주 흔한"></textarea></label>
+            <label class="field full"><span>메모 · 예문 · 오답 이유 <small>(선택)</small></span><textarea id="noteInput" maxlength="1500" placeholder="예문이나 헷갈린 포인트를 적어두세요."></textarea></label>
+            <label class="field full"><span>태그 <small>(선택)</small></span><input id="tagInput" maxlength="100" placeholder="쉼표로 구분: reading, science"></label>
+          </div>
+          <div class="form-actions"><button type="button" class="secondary" id="cancelEdit" hidden>취소</button><button type="submit" class="primary" id="saveCard">카드 저장 <span>→</span></button></div>
+        </form>
+      </section>
+
+      <section class="view" id="view-stats">
+        <div class="page-title"><span class="eyebrow">PROGRESS</span><h1>기억의 기록</h1><p>완벽함보다 이어가는 리듬을 확인하세요.</p></div>
+        <div class="stats-grid">
+          <article><span>TOTAL CARDS</span><strong id="totalCards">0</strong><p>저장된 모든 학습 카드</p></article>
+          <article><span>MASTER RATE</span><strong id="masterRate">0%</strong><p>전체 응답 중 MASTER 비율</p></article>
+          <article><span>TOTAL REVIEWS</span><strong id="totalReviews">0</strong><p>지금까지 완료한 복습</p></article>
+        </div>
+        <div class="settings-grid">
+          <article class="settings-card">
+            <span class="eyebrow">DAILY GOAL</span><h2>하루 학습량</h2>
+            <label class="range-row"><input type="range" id="dailyGoal" min="5" max="50" step="5"><output id="dailyGoalOutput">20장</output></label>
+            <p>기한이 지난 카드부터 우선 배정하고, 남는 자리에 새 카드를 채웁니다.</p>
+          </article>
+          <article class="settings-card">
+            <span class="eyebrow">DATA</span><h2>백업 · 복원</h2>
+            <p>학습 기록은 이 브라우저에 저장됩니다. 기기를 바꾸기 전에 백업하세요.</p>
+            <div class="data-actions"><button class="secondary" id="exportData">JSON 내보내기</button><label class="secondary file-button">JSON 가져오기<input type="file" id="importData" accept="application/json"></label></div>
+          </article>
+        </div>
+        <article class="algorithm-note">
+          <div><span class="eyebrow light">HOW IT WORKS</span><h2>SM-2 기반 간격 반복</h2></div>
+          <p><b>NOT AT ALL</b>은 기억 단계를 초기화하고 오늘 다시 등장합니다. <b>SOSO</b>는 난이도를 올려 더 자주, <b>MASTER</b>는 간격을 길게 조정합니다. 성공한 카드는 기본적으로 1일 → 6일 → 이전 간격 × 개인 난이도 계수 순으로 복습합니다.</p>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <dialog id="confirmDialog"><h3>카드를 삭제할까요?</h3><p>삭제한 카드와 학습 기록은 복구할 수 없습니다.</p><div><button class="secondary" value="cancel">취소</button><button class="danger" value="confirm">삭제</button></div></dialog>
+  <script src="app.js"></script>
+</body>
+</html>
