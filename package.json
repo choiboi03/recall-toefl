@@ -1,0 +1,12 @@
+{
+  "name": "recall-toefl-study-deck",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A local-first TOEFL spaced repetition study deck.",
+  "scripts": {
+    "test": "node tests/smoke.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "^26.1.0"
+  }
+}
